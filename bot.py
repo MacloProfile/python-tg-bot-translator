@@ -62,7 +62,7 @@ async def set_second_language(message):
 @bot.message_handler(commands=['status'])
 async def show_status(message):
     first_lang = user_translation_language.get(message.chat.id, 'en')
-    second_lang = user_second_translation_language.get(message.chat.id, 'en')
+    second_lang = user_second_translation_language.get(message.chat.id, 'ru')
     await bot.reply_to(message, 'First translation language: ' + LANGUAGES.get(first_lang, 'English') + '\n'
                                  'Second translation language: ' + LANGUAGES.get(second_lang, 'English'))
 
@@ -81,11 +81,8 @@ async def user_text(message):
     # Translate the text to the corresponding language
     if message_lang == translation_lang:
         send = translator.translate(message.text, dest=second_translation_lang)
-    elif message_lang == second_translation_lang:
-        send = translator.translate(message.text, dest=translation_lang)
     else:
-        await bot.reply_to(message, 'Language not found')
-        return
+        send = translator.translate(message.text, dest=translation_lang)
 
     await bot.reply_to(message, send.text)
     
