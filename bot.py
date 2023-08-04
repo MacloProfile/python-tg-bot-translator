@@ -38,8 +38,9 @@ def create_start_reply_keyboard():
 def get_available_commands():
     commands_list = [
         '/start - Start the bot',
-        '/setfrst "en" - Set the first translation language',
-        '/setscnd "en" - Set the second translation language',
+        '/setfrst en - Set the first translation language',
+        '/setscnd en - Set the second translation language',
+        '/languages - Show the list of languages',
         '/status - Show the selected languages for translation',
     ]
     return "\n".join(commands_list)
@@ -119,7 +120,7 @@ async def set_second_language(message):
 @bot.message_handler(commands=['status'])
 async def show_status(message):
     first_lang = user_translation_language.get(message.chat.id, 'en')
-    second_lang = user_second_translation_language.get(message.chat.id, 'ru')
+    second_lang = user_second_translation_language.get(message.chat.id, 'en')
     await bot.reply_to(message, 'First translation language: ' + LANGUAGES.get(first_lang, 'English') + '\n'
                                  'Second translation language: ' + LANGUAGES.get(second_lang, 'English'))
 
