@@ -38,7 +38,7 @@ def get_available_languages():
 @bot.message_handler(commands=['languages'])
 async def show_languages(message):
     languages_list = get_available_languages()
-    await bot.reply_to(message, 'Available languages for translation:\n' + languages_list,
+    await bot.send_message(message.chat.id, 'Available languages for translation:\n' + languages_list,
                        reply_markup=create_start_reply_keyboard())
 
 
@@ -56,7 +56,7 @@ async def send_welcome(message):
 
     keyboard.add(telebot.types.KeyboardButton("🇺🇸English"), telebot.types.KeyboardButton("🇷🇺Russian"))
 
-    await bot.reply_to(message, '👋Hello, ' + message.from_user.first_name + "!\n\n" +
+    await bot.send_message(message.chat.id, '👋Hello, ' + message.from_user.first_name + "!\n\n" +
                        "Select the language of the bot interface. The language can be changed later\n" +
                        "---------\n" +
                        "Выберите язык интерфейса бота. Язык можно изменить позднее", reply_markup=keyboard)
@@ -80,7 +80,7 @@ async def handle_button_two(message):
 @bot.message_handler(commands=['admin'])
 @bot.message_handler(func=lambda message: message.text == '❤Admin')
 async def admin_command(message):
-    await bot.reply_to(message, 'test1', reply_markup=create_start_reply_keyboard())
+    await bot.send_message(message.chat.id, 'test1', reply_markup=create_start_reply_keyboard())
 
 
 # Handler for the 📖Help command
@@ -88,7 +88,7 @@ async def admin_command(message):
 @bot.message_handler(func=lambda message: message.text == '📖Help')
 async def send_help(message):
     help_text = languages.get_available_commands(flag)
-    await bot.reply_to(message, help_text, reply_markup=create_start_reply_keyboard())
+    await bot.send_message(message.chat.id, help_text, reply_markup=create_start_reply_keyboard())
 
 
 # Handler for the /setfrst command
@@ -99,11 +99,11 @@ async def set_language(message):
         # Check if the chosen language exists
         if lang_code in LANGUAGES:
             user_translation_language[message.chat.id] = lang_code
-            await bot.reply_to(message, 'First translation language set to: ' + LANGUAGES[lang_code])
+            await bot.send_message(message.chat.id, 'First translation language set to: ' + LANGUAGES[lang_code])
         else:
-            await bot.reply_to(message, 'Invalid language. Using English as the default language.')
+            await bot.send_message(message.chat.id, 'Invalid language. Using English as the default language.')
     except IndexError:
-        await bot.reply_to(message, 'Usage: /setfrst language_code')
+        await bot.send_message(message.chat.id, 'Usage: /setfrst language_code')
 
 
 # Handler for the /setscnd command
@@ -114,11 +114,11 @@ async def set_second_language(message):
         # Check if the chosen language exists
         if lang_code in LANGUAGES:
             user_second_translation_language[message.chat.id] = lang_code
-            await bot.reply_to(message, 'Second translation language set to: ' + LANGUAGES[lang_code])
+            await bot.send_message(message.chat.id, 'Second translation language set to: ' + LANGUAGES[lang_code])
         else:
-            await bot.reply_to(message, 'Invalid language. Using English as the default language.')
+            await bot.send_message(message.chat.id, 'Invalid language. Using English as the default language.')
     except IndexError:
-        await bot.reply_to(message, 'Usage: /setscnd language_code')
+        await bot.send_message(message.chat.id, 'Usage: /setscnd language_code')
 
 
 # Handler for the /status command
@@ -126,7 +126,7 @@ async def set_second_language(message):
 async def show_status(message):
     first_lang = user_translation_language.get(message.chat.id, 'en')
     second_lang = user_second_translation_language.get(message.chat.id, 'en')
-    await bot.reply_to(message, languages.get_status(flag, LANGUAGES.get(first_lang, 'English'), LANGUAGES.get(
+    await bot.send_message(message.chat.id, languages.get_status(flag, LANGUAGES.get(first_lang, 'English'), LANGUAGES.get(
         second_lang, 'English')))
 
 
@@ -148,7 +148,7 @@ async def user_text(message):
     else:
         send = translator.translate(message.text, dest=translation_lang)
 
-    await bot.reply_to(message, send.text)
+    await bot.send_message(message.chat.id, send.text)
 
 
 # Handler for pictures with captions
