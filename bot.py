@@ -7,24 +7,25 @@ from telebot.types import ReplyKeyboardMarkup
 from telebot import types
 
 import languages
+import user_list
 # Import the bot token from the config.py file
 from config import BOT_TOKEN
 
 # Create the bot instance
 bot = AsyncTeleBot(BOT_TOKEN, parse_mode=None)
 # Global variable to keep track of the user's language selection
-flag = "0"
+flag = "1"
 
 # Dictionaries to store the first and second translation languages for each user
 user_translation_language = {}
 user_second_translation_language = {}
 
 
-# Function to create the reply keyboard with the "Admin" and "Help" buttons in one row
+# Function to create the reply keyboard with the "Support" and "Help" buttons in one row
 def create_start_reply_keyboard():
     reply_keyboard = ReplyKeyboardMarkup(row_width=2, resize_keyboard=True)
     reply_keyboard.add('❕Info', '📖Help')
-    reply_keyboard.add('❤Admin', '🌐Chosen Language')
+    reply_keyboard.add('❤Support', '🌐Chosen Language')
     return reply_keyboard
 
 
@@ -53,6 +54,7 @@ def translate_message(message_text, from_lang, to_lang):
 # Handler for the /start command
 @bot.message_handler(commands=['start'])
 async def send_welcome(message):
+    write_user_id(message.from_user.id)
     chat_id = message.chat.id
     keyboard = telebot.types.ReplyKeyboardMarkup(resize_keyboard=True)
 
@@ -62,6 +64,27 @@ async def send_welcome(message):
                            "Select the language of the bot interface. The language can be changed later\n" +
                            "---------\n" +
                            "Выберите язык интерфейса бота. Язык можно изменить позднее", reply_markup=keyboard)
+
+
+# Function to read original user id's from the file
+def read_user_ids():
+    try:
+        with open('users.txt', 'r') as file:
+            user_ids = file.readlines()
+            return [int(uid.strip()) for uid in user_ids]
+    except FileNotFoundError:
+        return []
+
+
+def write_user_id(user_id):
+    with open('users.txt', 'a') as file:
+        file.write(str(user_id) + '\n')
+
+
+# Handler for the /root command
+@bot.message_handler(commands=['root'])
+async def root_command(message):
+    await bot.send_message(message.chat.id, user_list.user_scanning(message))
 
 
 @bot.message_handler(func=lambda message: message.text == "🇺🇸English")
@@ -78,12 +101,12 @@ async def handle_button_two(message):
     await bot.send_message(message.chat.id, languages.get_start_info(flag), reply_markup=create_start_reply_keyboard())
 
 
-# Handler for the ❤Admin command
-@bot.message_handler(commands=['admin'])
-@bot.message_handler(func=lambda message: message.text == '❤Admin')
+# Handler for the ❤Support command
+@bot.message_handler(commands=['support'])
+@bot.message_handler(func=lambda message: message.text == '❤Support')
 async def admin_command(message):
     print(user_second_translation_language)
-    await bot.send_message(message.chat.id, 'test1', reply_markup=create_start_reply_keyboard())
+    await bot.send_message(message.chat.id, 'Support - @marisweeti', reply_markup=create_start_reply_keyboard())
 
 
 # Handler for the 📖Help command
