@@ -23,7 +23,8 @@ user_second_translation_language = {}
 # Function to create the reply keyboard with the "Admin" and "Help" buttons in one row
 def create_start_reply_keyboard():
     reply_keyboard = ReplyKeyboardMarkup(row_width=2, resize_keyboard=True)
-    reply_keyboard.add('❤Admin', '📖Help')
+    reply_keyboard.add('❕Info', '📖Help')
+    reply_keyboard.add('❤Admin', '🌐Chosen Language')
     return reply_keyboard
 
 
@@ -39,7 +40,7 @@ def get_available_languages():
 async def show_languages(message):
     languages_list = get_available_languages()
     await bot.send_message(message.chat.id, 'Available languages for translation:\n' + languages_list,
-                       reply_markup=create_start_reply_keyboard())
+                           reply_markup=create_start_reply_keyboard())
 
 
 # Function to translate the message based on user's selected languages
@@ -52,14 +53,15 @@ def translate_message(message_text, from_lang, to_lang):
 # Handler for the /start command
 @bot.message_handler(commands=['start'])
 async def send_welcome(message):
+    chat_id = message.chat.id
     keyboard = telebot.types.ReplyKeyboardMarkup(resize_keyboard=True)
 
     keyboard.add(telebot.types.KeyboardButton("🇺🇸English"), telebot.types.KeyboardButton("🇷🇺Russian"))
-
-    await bot.send_message(message.chat.id, '👋Hello, ' + message.from_user.first_name + "!\n\n" +
-                       "Select the language of the bot interface. The language can be changed later\n" +
-                       "---------\n" +
-                       "Выберите язык интерфейса бота. Язык можно изменить позднее", reply_markup=keyboard)
+    await bot.send_sticker(chat_id, 'CAACAgIAAxkBAAHY6rRkzT06HjGgmmR0FlRlU9tqb-RKJgACugADMNSdEYTXxIjEUGdWLwQ')
+    await bot.send_message(chat_id, '👋Hello, ' + message.from_user.first_name + "!\n\n" +
+                           "Select the language of the bot interface. The language can be changed later\n" +
+                           "---------\n" +
+                           "Выберите язык интерфейса бота. Язык можно изменить позднее", reply_markup=keyboard)
 
 
 @bot.message_handler(func=lambda message: message.text == "🇺🇸English")
@@ -84,8 +86,15 @@ async def admin_command(message):
 
 
 # Handler for the 📖Help command
-@bot.message_handler(commands=['help'])
+@bot.message_handler(commands=['info'])
 @bot.message_handler(func=lambda message: message.text == '📖Help')
+async def admin_command(message):
+    await bot.send_message(message.chat.id, languages.get_start_info(flag), reply_markup=create_start_reply_keyboard())
+
+
+# Handler for the ❕Info command
+@bot.message_handler(commands=['info'])
+@bot.message_handler(func=lambda message: message.text == '❕Info')
 async def send_help(message):
     help_text = languages.get_available_commands(flag)
     await bot.send_message(message.chat.id, help_text, reply_markup=create_start_reply_keyboard())
@@ -123,11 +132,13 @@ async def set_second_language(message):
 
 # Handler for the /status command
 @bot.message_handler(commands=['status'])
+@bot.message_handler(func=lambda message: message.text == '🌐Chosen Language')
 async def show_status(message):
     first_lang = user_translation_language.get(message.chat.id, 'en')
     second_lang = user_second_translation_language.get(message.chat.id, 'en')
-    await bot.send_message(message.chat.id, languages.get_status(flag, LANGUAGES.get(first_lang, 'English'), LANGUAGES.get(
-        second_lang, 'English')))
+    await bot.send_message(message.chat.id,
+                           languages.get_status(flag, LANGUAGES.get(first_lang, 'English'), LANGUAGES.get(
+                               second_lang, 'English')))
 
 
 # Handler for text messages

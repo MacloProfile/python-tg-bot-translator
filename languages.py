@@ -14,9 +14,9 @@ MOST_POPULAR_LANGUAGES = [
 
 def get_available_commands(num):
     if num == "0":
-        return 'Available commands for the bot:\n' + '/start - Start the bot\n' + '/setfrst en - Set the first translation language\n' + '/setscnd en - Set the second translation language\n' + '/languages - Show the list of languages\n' + '/status - Show the selected languages for translation'
+        return 'Available commands for the bot:\n' + '/start - Start the bot\n' + '/help - how to use the bot\n' +'/setfrst en - Set the first translation language\n' + '/setscnd en - Set the second translation language\n' + '/languages - Show the list of languages\n' + '/status - Show the selected languages for translation'
     elif num == "1":
-        return 'Доступные команды для бота:\n' + '/start - Запустить бота\n' + '/setfrst en - Установить первый язык перевода\n' + '/setscnd en - Установить второй язык перевода\n' + '/languages - Показать список языков\n' + '/status - Показать выбранные языки для перевода'
+        return 'Доступные команды для бота:\n' + '/start - Запустить бота\n' + '/help - как пользоваться ботом\n' + '/setfrst en - Установить первый язык перевода\n' + '/setscnd en - Установить второй язык перевода\n' + '/languages - Показать список языков\n' + '/status - Показать выбранные языки для перевода'
 
 
 def get_start_info(num):
