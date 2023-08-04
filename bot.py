@@ -82,6 +82,7 @@ async def handle_button_two(message):
 @bot.message_handler(commands=['admin'])
 @bot.message_handler(func=lambda message: message.text == '❤Admin')
 async def admin_command(message):
+    print(user_second_translation_language)
     await bot.send_message(message.chat.id, 'test1', reply_markup=create_start_reply_keyboard())
 
 
@@ -100,8 +101,8 @@ async def send_help(message):
     await bot.send_message(message.chat.id, help_text, reply_markup=create_start_reply_keyboard())
 
 
-# Handler for the /setfrst command
-@bot.message_handler(commands=['setfrst'])
+# Handler for the /first command
+@bot.message_handler(commands=['first'])
 async def set_language(message):
     try:
         lang_code = message.text.split(' ', 1)[1].lower()
@@ -112,11 +113,11 @@ async def set_language(message):
         else:
             await bot.send_message(message.chat.id, 'Invalid language. Using English as the default language.')
     except IndexError:
-        await bot.send_message(message.chat.id, 'Usage: /setfrst language_code')
+        await bot.send_message(message.chat.id, 'Usage: /first language_code')
 
 
-# Handler for the /setscnd command
-@bot.message_handler(commands=['setscnd'])
+# Handler for the /second command
+@bot.message_handler(commands=['second'])
 async def set_second_language(message):
     try:
         lang_code = message.text.split(' ', 1)[1].lower()
@@ -127,7 +128,7 @@ async def set_second_language(message):
         else:
             await bot.send_message(message.chat.id, 'Invalid language. Using English as the default language.')
     except IndexError:
-        await bot.send_message(message.chat.id, 'Usage: /setscnd language_code')
+        await bot.send_message(message.chat.id, 'Usage: /second language_code')
 
 
 # Handler for the /status command
