@@ -86,6 +86,12 @@ def write_user_id(user_id):
 async def root_command(message):
     await bot.send_message(message.chat.id, user_list.user_scanning(message))
 
+# Handler for the /userreset command
+@bot.message_handler(commands=['userreset'])
+async def user_reset(message):
+    await bot.send_message(message.chat.id, user_list.remove_duplicates_inplace(message, 'users.txt'))
+
+
 
 @bot.message_handler(func=lambda message: message.text == "🇺🇸English")
 async def handle_button_one(message):
