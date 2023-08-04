@@ -21,10 +21,20 @@ def get_available_commands(num):
 
 def get_start_info(num):
     if num == "0":
-        return "Set the first and second languages with the following commands.\n" + "❗The first language is the primary language. If you enter a phrase and do not specify its ""language, it will be automatically translated into the first language (/first)\n\n ""/first en - Set the primary language for translation\n" + "/second uk - Set the second translation language\n\n" + 'Most popular languages for translation (for a complete list, type /languages):\n' + '\n'.join(
+        return "Set the first and second languages with the following commands.\n" + "❗The first language is the primary language. If you enter a phrase and do not specify its ""language, it will be automatically translated into the first language (/first)\n\n ""/first en - Set the primary language for translation\n" + "/second uk - Set the second translation language\n\n" \
+               + "EXAMPLE: the main language is English, the second language is Spanish. Below are the following lines of the communication-translation type\n" + \
+               "me encanta la pizza = I love pizza\n" \
+               + "I love pizza = me encanta la pizza\n" \
+               + "ピザが大好きです = i love pizza\n" \
+               + 'Most popular languages for translation (for a complete list, type /languages):\n' + '\n'.join(
             MOST_POPULAR_LANGUAGES)
     elif num == "1":
-        return "Установите первый и второй языки с помощью следующих команд.\n" + "❗Первый язык является основным. Если вы вводите фразу и не указываете ее ""язык, она будет автоматически переведена на первый язык (/first)\n\n ""/first en - Установка основного языка перевода\n" + "/second uk - Установка второго языка перевода\n\n" + 'Самые популярные языки для перевода (для получения полного списка введите /languages):\n' + '\n'.join(
+        return "Установите первый и второй языки с помощью следующих команд.\n" + "❗Первый язык является основным. Если вы вводите фразу и не указываете ее ""язык, она будет автоматически переведена на первый язык (/first)\n\n ""/first en - Установка основного языка перевода\n" + "/second uk - Установка второго языка перевода\n\n"\
+               + "ПРИМЕР: основной язык - Английский, второй - Испанский. Ниже приведены строчки типа ообщение - перевод\n" +\
+               "me encanta la pizza = I love pizza\n"\
+               + "I love pizza = me encanta la pizza\n"\
+               + "ピザが大好きです = i love pizza\n"\
+               + 'Самые популярные языки для перевода (для получения полного списка введите /languages):\n' + '\n'.join(
             MOST_POPULAR_LANGUAGES)
 
 
