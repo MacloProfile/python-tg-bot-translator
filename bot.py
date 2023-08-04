@@ -15,6 +15,19 @@ bot = AsyncTeleBot(BOT_TOKEN, parse_mode=None)
 user_translation_language = {}
 user_second_translation_language = {}
 
+# List of most popular languages
+MOST_POPULAR_LANGUAGES = [
+    'en - English',
+    'ru - Russian',
+    'es - Spanish',
+    'fr - French',
+    'de - German',
+    'zh-CN - Chinese (Simplified)',
+    'it - Italian',
+    'pt - Portuguese',
+    'ja - Japanese'
+]
+
 # Function to create the reply keyboard with the "Admin" and "Help" buttons in one row
 def create_start_reply_keyboard():
     reply_keyboard = ReplyKeyboardMarkup(row_width=2, resize_keyboard=True)
@@ -25,11 +38,24 @@ def create_start_reply_keyboard():
 def get_available_commands():
     commands_list = [
         '/start - Start the bot',
-        '/setlang - Set the first translation language',
-        '/secondlang - Set the second translation language',
+        '/setfrst "en" - Set the first translation language',
+        '/setscnd "en" - Set the second translation language',
         '/status - Show the selected languages for translation',
     ]
     return "\n".join(commands_list)
+
+# Function to get the list of available languages in Google Translate
+def get_available_languages():
+    sorted_languages = sorted(LANGUAGES.items(), key=lambda x: x[1])
+    language_list = [f'{code} - {name}' for code, name in sorted_languages]
+    return '\n'.join(language_list)
+
+# Handler for the /languages command
+@bot.message_handler(commands=['languages'])
+async def show_languages(message):
+    languages_list = get_available_languages()
+    await bot.reply_to(message, 'Available languages for translation:\n' + languages_list,
+                       reply_markup=create_start_reply_keyboard())
 
 # Function to translate the message based on user's selected languages
 def translate_message(message_text, from_lang, to_lang):
@@ -40,7 +66,12 @@ def translate_message(message_text, from_lang, to_lang):
 # Handler for the /start command
 @bot.message_handler(commands=['start'])
 async def send_welcome(message):
-    await bot.reply_to(message, 'Hello, ' + message.from_user.first_name,
+    await bot.reply_to(message, 'Hello, ' + message.from_user.first_name + "!\n\n" +
+                        "Set the first and second languages with the following commands.\n" +
+                        "/setfrst uk - Set the first translation language\n" +
+                        "/setscnd en - Set the second translation language\n\n" +
+                       'Most popular languages for translation (for a complete list, type /languages):\n' +
+                       '\n'.join(MOST_POPULAR_LANGUAGES),
                        reply_markup=create_start_reply_keyboard())
 
 # Handler for the ❤️Admin command
@@ -56,9 +87,8 @@ async def send_help(message):
     help_text = 'Available commands for the bot:\n' + get_available_commands()
     await bot.reply_to(message, help_text, reply_markup=create_start_reply_keyboard())
 
-
-# Handler for the /setlang command
-@bot.message_handler(commands=['setlang'])
+# Handler for the /setfrst command
+@bot.message_handler(commands=['setfrst'])
 async def set_language(message):
     try:
         lang_code = message.text.split(' ', 1)[1].lower()
@@ -69,10 +99,10 @@ async def set_language(message):
         else:
             await bot.reply_to(message, 'Invalid language. Using English as the default language.')
     except IndexError:
-        await bot.reply_to(message, 'Usage: /setlang language_code')
+        await bot.reply_to(message, 'Usage: /setfrst language_code')
 
-# Handler for the /secondlang command
-@bot.message_handler(commands=['secondlang'])
+# Handler for the /setscnd command
+@bot.message_handler(commands=['setscnd'])
 async def set_second_language(message):
     try:
         lang_code = message.text.split(' ', 1)[1].lower()
@@ -83,7 +113,7 @@ async def set_second_language(message):
         else:
             await bot.reply_to(message, 'Invalid language. Using English as the default language.')
     except IndexError:
-        await bot.reply_to(message, 'Usage: /secondlang language_code')
+        await bot.reply_to(message, 'Usage: /setscnd language_code')
 
 # Handler for the /status command
 @bot.message_handler(commands=['status'])
