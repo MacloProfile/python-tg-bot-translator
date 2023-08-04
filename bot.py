@@ -1,20 +1,19 @@
 # Import the necessary libraries
-from googletrans import LANGUAGES
+from googletrans import Translator, LANGUAGES
 from telebot.async_telebot import AsyncTeleBot
 import asyncio
 from telebot.types import ReplyKeyboardMarkup
 from telebot import types
 
-
 # Import the bot token from the config.py file
 from config import BOT_TOKEN
 
-# Create dictionaries to store the first and second translation languages for each user
-user_translation_language = {}
-user_second_translation_language = {}
-
 # Create the bot instance
 bot = AsyncTeleBot(BOT_TOKEN, parse_mode=None)
+
+# Dictionaries to store the first and second translation languages for each user
+user_translation_language = {}
+user_second_translation_language = {}
 
 # Function to create the reply keyboard with the "Admin" and "Help" buttons in one row
 def create_start_reply_keyboard():
@@ -50,7 +49,6 @@ def get_available_commands():
 async def send_help(message):
     help_text = 'Available commands for the bot:\n' + get_available_commands()
     await bot.reply_to(message, help_text, reply_markup=create_start_reply_keyboard())
-
 
 # Handler for the /setlang command
 @bot.message_handler(commands=['setlang'])
