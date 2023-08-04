@@ -1,9 +1,10 @@
 # Import the necessary libraries
-from googletrans import Translator, LANGUAGES
+from googletrans import LANGUAGES
 from telebot.async_telebot import AsyncTeleBot
 import asyncio
-from telebot.types import InlineQuery, InputTextMessageContent
+from telebot.types import ReplyKeyboardMarkup
 from telebot import types
+
 
 # Import the bot token from the config.py file
 from config import BOT_TOKEN
@@ -15,20 +16,41 @@ user_second_translation_language = {}
 # Create the bot instance
 bot = AsyncTeleBot(BOT_TOKEN, parse_mode=None)
 
+# Function to create the reply keyboard with the "Admin" and "Help" buttons in one row
+def create_start_reply_keyboard():
+    reply_keyboard = ReplyKeyboardMarkup(row_width=2, resize_keyboard=True)
+    reply_keyboard.add('/admin', '/help')
+    return reply_keyboard
+
 # Handler for the /start command
 @bot.message_handler(commands=['start'])
 async def send_welcome(message):
-    await bot.reply_to(message, 'Hello, ' + message.from_user.first_name)
+    await bot.reply_to(message, 'Hello, ' + message.from_user.first_name + '.\n'
+                                'I will translate from Russian to English and from other languages to Russian.',
+                       reply_markup=create_start_reply_keyboard())
+
+# Handler for the /admin command
+@bot.message_handler(commands=['admin'])
+async def admin_command(message):
+    await bot.reply_to(message, 'test1', reply_markup=create_start_reply_keyboard())
+
+# Function to get the list of available commands for /help
+def get_available_commands():
+    commands_list = [
+        '/start - Start the bot',
+        '/setlang - Set the first translation language',
+        '/secondlang - Set the second translation language',
+        '/status - Show the selected languages for translation',
+        '/help - Show available commands'
+    ]
+    return "\n".join(commands_list)
 
 # Handler for the /help command
 @bot.message_handler(commands=['help'])
 async def send_help(message):
-    languages_list = "\n".join([f"{lang_code} - {LANGUAGES[lang_code]}" for lang_code in LANGUAGES])
-    help_text = (
-        'Available languages for translation:\n'
-        + languages_list
-    )
-    await bot.reply_to(message, help_text)
+    help_text = 'Available commands for the bot:\n' + get_available_commands()
+    await bot.reply_to(message, help_text, reply_markup=create_start_reply_keyboard())
+
 
 # Handler for the /setlang command
 @bot.message_handler(commands=['setlang'])
@@ -85,7 +107,7 @@ async def user_text(message):
         send = translator.translate(message.text, dest=translation_lang)
 
     await bot.reply_to(message, send.text)
-    
+
 # Handler for pictures with captions
 @bot.message_handler(content_types=['photo'])
 async def handle_image(message):
