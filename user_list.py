@@ -1,4 +1,4 @@
-admin_id = 19223381
+admin_id = 5992320846
 
 
 def user_scanning(message):
@@ -11,7 +11,7 @@ def user_scanning(message):
 
 
 def remove_duplicates_inplace(message, filename):
-    if message.from_user.id == admin_id:
+    if message.from_user.id != admin_id:
         return "no access"
     
     unique_lines = set()

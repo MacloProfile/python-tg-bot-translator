@@ -111,7 +111,6 @@ async def handle_button_two(message):
 @bot.message_handler(commands=['support'])
 @bot.message_handler(func=lambda message: message.text == '❤Support')
 async def admin_command(message):
-    print(user_second_translation_language)
     await bot.send_message(message.chat.id, 'Support - @marisweeti', reply_markup=create_start_reply_keyboard())
 
 
